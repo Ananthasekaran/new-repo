@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-south-1"   # Mumbai region
+  region = "ap-south-1"
 }
 
 # ------------------ KEY PAIR ------------------
@@ -12,7 +12,7 @@ resource "aws_key_pair" "deployer" {
 # ------------------ SECURITY GROUP ------------------
 
 resource "aws_security_group" "allow_ports" {
-  name        = "allow_ssh_http_newssss"
+  name        = "allow_ssh_http_jenkins"
   description = "Allow SSH, HTTP, and Jenkins"
 
   ingress {
@@ -32,7 +32,7 @@ resource "aws_security_group" "allow_ports" {
   }
 
   ingress {
-    description = "Jenkins"
+    description = "App Port"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
@@ -54,23 +54,20 @@ resource "aws_security_group" "allow_ports" {
 # ------------------ EC2 INSTANCE ------------------
 
 resource "aws_instance" "ubuntu" {
-  ami           = "ami-0f5ee92e2d63afc18"  # Ubuntu 22.04 Mumbai
-  instance_type = "t3.micro"
-
-  key_name        = aws_key_pair.deployer.key_name
-  vpc_security_group_ids = [aws_security_group.allow_ports.id]
+  ami                         = "ami-0f5ee92e2d63afc18"
+  instance_type               = "t3.micro"
+  key_name                    = aws_key_pair.deployer.key_name
+  vpc_security_group_ids      = [aws_security_group.allow_ports.id]
+  associate_public_ip_address = true
 
   tags = {
     Name = "Ananth-EC2"
   }
 }
 
-# ------------------ OUTPUTS ------------------
+# ------------------ OUTPUT ------------------
 
 output "instance_public_ip" {
-  value = aws_instance.ubuntu.public_ip
-}
-
-output "instance_id" {
-  value = aws_instance.ubuntu.id
+  description = "Public IP of EC2 instance"
+  value       = aws_instance.ubuntu.public_ip
 }
