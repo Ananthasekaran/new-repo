@@ -12,7 +12,7 @@ resource "aws_key_pair" "deployer" {
 # ------------------ SECURITY GROUP ------------------
 
 resource "aws_security_group" "allow_ports" {
-  name        = "allow_ssh_http_jenkins"
+  name        = "allow_ssh_http_newssss"
   description = "Allow SSH, HTTP, and Jenkins"
 
   ingress {
